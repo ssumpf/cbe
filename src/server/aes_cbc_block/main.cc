@@ -114,7 +114,7 @@ class Cbe::Main : Rpc_object<Typed_root<Block::Session>>
 
 		Pool                    _request_pool { };
 		Splitter                _splitter     { };
-		Constructible<Crypto>   _crypto       { }; //"All your base are belong to us  " };
+		Constructible<Crypto>   _crypto       { };
 		Block_io                _io           { _block };
 		Bit_allocator<MAX_REQS> _tag_alloc    { };
 
@@ -282,6 +282,7 @@ class Cbe::Main : Rpc_object<Typed_root<Block::Session>>
 					if (!req.operation_defined()) { return; }
 
 					_request_pool.drop_completed_request(req);
+					_tag_alloc.free(req.tag);
 					ack.submit(req);
 
 					progress |= true;

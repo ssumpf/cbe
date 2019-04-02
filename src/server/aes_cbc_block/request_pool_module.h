@@ -48,15 +48,16 @@ struct Cbe::Module::Request_pool : Spark::Object<896>
 	/**
 	 * Check for any pending request
 	 *
-	 * The method will return true as long as there is a pending
-	 * request.
-	 *
-	 * \return true if a request is pending, otherwise false
+	 * \return the next pending request if there is one,
+	 *         otherwise a invalid request will be returned
 	 */
 	Block::Request peek_pending_request() const;
 
 	/**
 	 * Drop pending request
+	 *
+	 * \param  req  reference to the pending request that must be
+	 *              removed internally
 	 */
 	void drop_pending_request(Block::Request const &req);
 
@@ -71,21 +72,16 @@ struct Cbe::Module::Request_pool : Spark::Object<896>
 	/**
 	 * Check for any completed request
 	 *
-	 * The method will return true as long as there is a completed
-	 * request available.
-	 *
-	 * \return true if a request is pending, otherwise false
+	 * \return the next completed request if there is one,
+	 *         otherwise a invalid request will be returned
 	 */
 	Block::Request peek_completed_request() const;
 
 	/**
-	 * Take completed request
+	 * Drop completed request
 	 *
-	 * This method must only be called after executing
-	 * 'peek_completed_request' returned true.
-	 *
-	 * \return takes next completed request and removes it
-	 *         from the module
+	 * \param  req  reference to the completed request that must be
+	 *              removed internally
 	 */
 	void drop_completed_request(Block::Request const &req);
 
@@ -96,6 +92,8 @@ struct Cbe::Module::Request_pool : Spark::Object<896>
 	 * a known Block request. If all checks out it will return the
 	 * corresponding Block request, otherwise a invalid one will
 	 * by returned.
+	 *
+	 * \param  tag  tag identifying the Block::Request
 	 *
 	 * \return a valid Block::Request for the given tag or an
 	 *         an invalid one in case there is none
