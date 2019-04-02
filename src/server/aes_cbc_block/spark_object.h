@@ -18,7 +18,7 @@ namespace Spark {
 	struct Object
 	{
 		Genode::uint8_t _space[BYTES] { };
-	};
+	} __attribute__((packed));
 }
 
 #endif /* _SPARK_OBJECT_H_ */

@@ -27,6 +27,9 @@
 #include <io_module.h>
 
 
+static bool _verbose;
+
+
 namespace Cbe {
 
 	struct Block_session_component;
@@ -180,6 +183,12 @@ class Cbe::Main : Rpc_object<Typed_root<Block::Session>>
 					request.tag = _tag_alloc.alloc();
 					_request_pool.submit_request(request, num);
 
+					if (_verbose) {
+						uint32_t const tag    = request.tag;
+						uint64_t const offset = request.offset;
+						log("New request:", tag, " offset:", Hex(offset), " primitives:", num);
+					}
+
 					progress |= true;
 					return Block_session_component::Response::ACCEPTED;
 				});
@@ -281,10 +290,16 @@ class Cbe::Main : Rpc_object<Typed_root<Block::Session>>
 					Block::Request const &req = _request_pool.peek_completed_request();
 					if (!req.operation_defined()) { return; }
 
-					_request_pool.drop_completed_request(req);
 					_tag_alloc.free(req.tag);
 					ack.submit(req);
 
+					if (_verbose) {
+						uint32_t const tag    = req.tag;
+						uint64_t const offset = req.offset;
+						log("Ack request:", tag, " offset:", Hex(offset));
+					}
+
+					_request_pool.drop_completed_request(req);
 					progress |= true;
 				});
 
@@ -343,6 +358,8 @@ class Cbe::Main : Rpc_object<Typed_root<Block::Session>>
 		 */
 		Main(Env &env) : _env(env)
 		{
+			_verbose = _config_rom.xml().attribute_value("verbose", false);
+
 			_setup_block_info();
 			_setup_crypto();
 

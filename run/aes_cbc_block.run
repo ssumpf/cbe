@@ -34,15 +34,15 @@ install_config {
 	</start>
 
 	<start name="ram_block">
-		<resource name="RAM" quantum="16M"/>
+		<resource name="RAM" quantum="1G"/>
 		<provides><service name="Block"/></provides>
-		<config size="8M" block_size="512"/>
+		<config size="900M" block_size="512"/>
 	</start>
 
 	<start name="aes_cbc_block">
 		<resource name="RAM" quantum="4M"/>
 		<provides><service name="Block"/></provides>
-		<config key="All your base are belong to us"/>
+		<config verbose="yes" key="All your base are belong to us"/>
 		<route>
 			<service name="Block"> <child name="ram_block"/> </service>
 			<any-service> <parent/> </any-service>
@@ -51,8 +51,9 @@ install_config {
 
 	<start name="block_tester">
 		<resource name="RAM" quantum="32M"/>
-		<config verbose="yes" report="no" log="yes" stop_on_error="no">
+		<config verbose="no" report="no" log="yes" stop_on_error="no">
 			<tests>
+<!--
 				<replay bulk="no">
 					<request type="read" lba="128" count="2"/>
 					<request type="read" lba="128" count="1"/>
@@ -63,14 +64,15 @@ install_config {
 					<request type="write" lba="128" count="1"/>
 					<request type="write" lba="129" count="2"/>
 				</replay>
+				<sequential length="8M" size="4K" synchronous="yes"/>
+				<sequential length="8M" size="8K" synchronous="yes"/>
+				<sequential length="8M" size="16K"/>
+				<sequential length="8M" size="64K"/>
+-->
+				<sequential length="8M" size="128K"/>
 <!--
-				<sequential length="1M" size="4K" synchronous="yes"/>
-				<sequential length="1M" size="8K" synchronous="yes"/>
-				<sequential length="1M" size="16K"/>
-				<sequential length="1M" size="64K"/>
-				<sequential length="1M" size="128K"/>
-				<sequential length="1M" size="4K" synchronous="yes" write="yes"/>
-				<sequential length="1M" size="64K" write="yes" synchronous="yes"/>
+				<sequential length="8M" size="4K" synchronous="yes" write="yes"/>
+				<sequential length="8M" size="64K" write="yes" synchronous="yes"/>
 -->
 			</tests>
 		</config>
@@ -89,7 +91,7 @@ build_boot_image {
 	ld.lib.so spark.lib.so libsparkcrypto.lib.so
 }
 
-append qemu_args "-nographic "
+append qemu_args " -m 2G -nographic "
 
 
 run_genode_until {.*child "block_tester" exited with exit value 0.*\n} 360
