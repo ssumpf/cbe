@@ -44,4 +44,13 @@ is
 	return Boolean
 	is (Number_Of_Bytes_Type(CXX_Sz) = Number_Of_Bits_To_Bytes(Spark_Sz));
 
+	--
+	-- Fitting_Object_Size
+	--
+	function Fitting_Object_Size(
+		Spark_Sz : in Number_Of_Bits_Type;
+		CXX_Sz   : in CXX_Size_Type)
+	return Boolean
+	is (Number_Of_Bytes_Type(CXX_Sz) >= Number_Of_Bits_To_Bytes(Spark_Sz));
+
 end CBE.CXX;

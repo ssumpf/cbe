@@ -27,7 +27,7 @@ is
 		Req  : constant CXX_Request.Object_Type   := (0,0,0,0,0,0);
 		Prim : constant CXX_Primitive.Object_Type := (0,0,0,0,0);
 	begin
-		if not Correct_Object_Size(Obj'Size, Obj_Size) then
+		if not Fitting_Object_Size(Obj'Size, Obj_Size) then
 			raise Program_Error;
 		elsif not Correct_Object_Size(Req'Size, Req_Size) then
 			raise Program_Error;
