@@ -37,7 +37,6 @@ is
 
 				Primitive.Success(Obj.Prim, Request.True);
 				Obj.State := Complete;
-
 			when others =>
 
 				Obj.State := Pending;
@@ -100,6 +99,13 @@ is
 			then
 				-- XXX not sure if that works as expected
 				Plain_Data := Obj.Plain_Data;
+			end if;
+			if
+				Primitive.Operation(Obj.Prim) = Request.Write and
+				Primitive.Success(Prm)        = Request.True
+			then
+				-- XXX not sure if that works as expected
+				Plain_Data := Crypto.Plain_Data_Type(Obj.Cipher_Data);
 			end if;
 
 		end Copy_Completed_Data;
