@@ -477,6 +477,7 @@ class Cbe::Module::Write_back
 			e.state = Entry::State::PENDING;
 			e.tag   = Cbe::Tag::IO_TAG;
 			_state = State::IO;
+			Genode::log("CDATA:", crypto_data);
 		}
 
 		/*********
